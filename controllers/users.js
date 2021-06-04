@@ -60,17 +60,6 @@ module.exports.updateUserInfo = (req, res, next) => {
     });
 };
 
-module.exports.updateAvatar = (req, res, next) => {
-  const userId = req.user._id;
-
-  User.findByIdAndUpdate(userId, { avatar: req.body.avatar }, { new: true, runValidators: true })
-    .orFail(new NotFoundError('Пользователь не найден'))
-    .then((user) => res.send({ user }))
-    .catch((err) => {
-      next(err);
-    });
-};
-
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 

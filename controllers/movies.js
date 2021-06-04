@@ -1,4 +1,5 @@
 const Movie = require('../models/movie');
+const { ForbiddenError, NotFoundError } = require('../errors');
 
 function getAllMovies(req, res) {
   return Movie.find({}).then((movies) => {
@@ -43,7 +44,22 @@ function addMovie(req, res, next) {
     });
 }
 
+function deleteMovie(req, res, next) {
+  Movie.findByIdAndDelete(req.params.id)
+    .orFail(new NotFoundError('Фильм не найден'))
+    .then((movie) => {
+      if (movie.owner.toString().toLowerCase() !== req.user._id.toLowerCase()) {
+        throw new ForbiddenError('Нельзя удалять данные другого пользователя');
+      }
+      return res.send(movie);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
 module.exports = {
   getAllMovies,
   addMovie,
+  deleteMovie,
 };

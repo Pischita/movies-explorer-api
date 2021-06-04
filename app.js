@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
+require('dotenv').config();
 const { NotFoundError } = require('./errors');
 const userRouter = require('./routes/users');
 const movieRouter = require('./routes/movies');
@@ -43,6 +44,10 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), userController.addUser);
+
+app.post('/signout', (req, res) => {
+  res.clearCookie('authorization').end();
+});
 
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Вызван неизвестный метод'));
