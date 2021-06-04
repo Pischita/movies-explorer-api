@@ -17,9 +17,9 @@ app.use(helmet());
 app.disable('x-powered-by');
 app.use(cookieParser());
 app.use(requestLogger);
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_NAME = 'bitfilmsdb' } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(`mongodb://localhost:27017/bitfilmsdb${DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
