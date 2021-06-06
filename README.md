@@ -1,4 +1,4 @@
 # movies-explorer-api
 
 Ссылка на сайт
-http://api.pishchyta.nomoredomains.club/
+https://api.pishchyta.nomoredomains.club/
