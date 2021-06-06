@@ -14,11 +14,4 @@ router.patch('/me', celebrate({
   }),
 }), auth, userController.updateUserInfo);
 
-router.post('/login', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
-  }),
-}), userController.login);
-
 module.exports = router;

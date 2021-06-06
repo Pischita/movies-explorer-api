@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(requestLogger);
 const { PORT = 3000, DB_NAME = 'bitfilmsdb' } = process.env;
 
-mongoose.connect(`mongodb://localhost:27017/bitfilmsdb${DB_NAME}`, {
+mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -40,6 +40,7 @@ app.post('/signin', celebrate({
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
+    name: Joi.string(),
     email: Joi.string().required(),
     password: Joi.string().required(),
   }),

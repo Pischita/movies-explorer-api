@@ -14,6 +14,7 @@ module.exports.addUser = (req, res, next) => {
   const {
     email,
     password,
+    name,
   } = req.body;
 
   if (!validator.isEmail(email)) {
@@ -24,11 +25,13 @@ module.exports.addUser = (req, res, next) => {
     User.create({
       email,
       password: hash,
+      name,
     })
       .then((user) => {
         res.status(201).send({
           _id: user._id,
           email: user.email,
+          name: user.name,
         });
       }).catch((err) => {
         next(err);
