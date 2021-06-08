@@ -17,7 +17,6 @@ function addMovie(req, res, next) {
     image,
     trailer,
     thumbnail,
-    owner,
     movieId,
     nameRU,
     nameEN,
@@ -32,7 +31,7 @@ function addMovie(req, res, next) {
     image,
     trailer,
     thumbnail,
-    owner,
+    owner: req.user._id,
     movieId,
     nameRU,
     nameEN,
@@ -44,18 +43,18 @@ function addMovie(req, res, next) {
     });
 }
 
-function deleteMovie(req, res, next) {
-  Movie.findByIdAndDelete(req.params.id)
-    .orFail(new NotFoundError('Фильм не найден'))
-    .then((movie) => {
-      if (movie.owner.toString().toLowerCase() !== req.user._id.toLowerCase()) {
-        throw new ForbiddenError('Нельзя удалять данные другого пользователя');
-      }
-      return res.send(movie);
-    })
-    .catch((err) => {
-      next(err);
-    });
+async function deleteMovie(req, res, next) {
+  const findedMovie = await Movie.findById(req.params.id);
+  if (!findedMovie) {
+    return next(new NotFoundError('Карточка не найдена'));
+  }
+
+  if (findedMovie.owner.toString().toLowerCase() !== req.user._id.toLowerCase()) {
+    return next(new ForbiddenError('Нельзя удалять карточку другого пользователя'));
+  }
+
+  const deletedMovie = await findedMovie.delete();
+  return res.json(deletedMovie);
 }
 
 module.exports = {

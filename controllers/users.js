@@ -65,6 +65,7 @@ module.exports.updateUserInfo = (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+  const { JWT_SECRET = 'super-secret-key' } = process.env;
 
   User.findOne({ email }).select('+password')
     .then((user) => {
@@ -77,7 +78,7 @@ module.exports.login = (req, res, next) => {
           if (!mathed) {
             return Promise.reject(new BadRequestError('Неправильный логин или пароль'));
           }
-          const token = jwt.sign({ _id: user._id }, 'super-secret-key', { expiresIn: '7d' });
+          const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
           return res.cookie('authorization', `Bearer ${token}`, { httpOnly: true, sameSite: true }).send(`Bearer ${token}`);
         }).catch((err) => {
           next(err);
