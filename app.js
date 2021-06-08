@@ -3,13 +3,20 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+
 require('dotenv').config();
+
 const { NotFoundError } = require('./errors');
 const router = require('./routes');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./middlewares/limitter');
 
 const app = express();
+
+app.set('trust proxy', 1);
+
+app.use(limiter);
 
 app.use(helmet());
 app.disable('x-powered-by');

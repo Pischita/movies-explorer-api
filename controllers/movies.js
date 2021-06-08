@@ -1,10 +1,10 @@
 const Movie = require('../models/movie');
 const { ForbiddenError, NotFoundError } = require('../errors');
 
-function getAllMovies(req, res) {
+function getAllMovies(req, res, next) {
   return Movie.find({}).then((movies) => {
     res.send(movies);
-  });
+  }).catch(next);
 }
 
 function addMovie(req, res, next) {

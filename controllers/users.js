@@ -2,7 +2,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFoundError, BadRequestError } = require('../errors');
+const { NotFoundError, BadRequestError, DuplicateError } = require('../errors');
 
 module.exports.getUsers = (req, res) => {
   User.find({}).then((users) => {
@@ -34,7 +34,11 @@ module.exports.addUser = (req, res, next) => {
           name: user.name,
         });
       }).catch((err) => {
-        next(err);
+        if (err.name === 'MongoError' && err.code === 11000) {
+          next(new DuplicateError('Пользователь c таким email уже существует'));
+        } else {
+          next(err);
+        }
       });
   }).catch((err) => {
     next(err);
