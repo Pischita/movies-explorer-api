@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const movieController = require('../controllers/movies');
 const auth = require('../middlewares/auth');
 
@@ -11,9 +12,24 @@ router.post('/', auth, celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required(),
-    trailer: Joi.string().required(),
-    thumbnail: Joi.string().required(),
+    image: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message('Передан некорректный URL для изображения');
+    }),
+    trailer: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message('Передан некорректный URL для трейлера');
+    }),
+    thumbnail: Joi.string().required().custom((value, helper) => {
+      if (validator.isURL(value, { require_protocol: true })) {
+        return value;
+      }
+      return helper.message('Передан некорректный URL иконки');
+    }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
