@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const cors = require('cors')
 
 require('dotenv').config();
 
@@ -17,6 +18,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(limiter);
+app.use(cors());
 
 app.use(helmet());
 app.disable('x-powered-by');
