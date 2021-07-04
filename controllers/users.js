@@ -83,7 +83,7 @@ module.exports.login = (req, res, next) => {
             return Promise.reject(new BadRequestError('Неправильный логин или пароль'));
           }
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-          return res.cookie('authorization', `Bearer ${token}`, { httpOnly: true, sameSite: true }).send(`Bearer ${token}`);
+          return res.cookie('authorization', `Bearer ${token}`, { httpOnly: true, sameSite: true }).json({ jwt: `Bearer ${token}` });
         }).catch((err) => {
           next(err);
         });
