@@ -33,7 +33,7 @@ router.post('/', auth, celebrate({
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-  }),
+  }).unknown(true),
 }), movieController.addMovie);
 
 router.delete('/:id', auth, celebrate({
